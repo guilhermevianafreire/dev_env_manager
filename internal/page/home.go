@@ -17,14 +17,16 @@ var (
 
 type HomePageModel struct {
 	menu         list.Model
-	selectedItem list.Item
+	selectedItem component.MenuItem
 	width        int
 	height       int
 }
 
 func NewHomePage(width int, height int) HomePageModel {
 	return HomePageModel{
-		menu: NewMenu(width, height),
+		menu:   NewMenu(width, height),
+		width:  width,
+		height: height,
 	}
 }
 
@@ -68,7 +70,10 @@ func (m HomePageModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			i, ok := m.menu.SelectedItem().(component.MenuItem)
 			if ok {
 				m.selectedItem = i
-				// Redirect to the selected page
+				switch m.selectedItem.Destination() {
+				case component.Environment:
+					return NewEnvironmentPage(m.width, m.height), nil
+				}
 			}
 			return m, nil
 		}
@@ -82,6 +87,8 @@ func (m HomePageModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m HomePageModel) View() string {
-	str := homePageStyle.Render(m.menu.View())
+	var debug string
+	//debug = fmt.Sprintf("\nresolution (home): %d x %d", m.width, m.height)
+	str := environmentMenuPageStyle.Render(m.menu.View(), debug)
 	return str
 }

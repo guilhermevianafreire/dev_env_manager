@@ -15,7 +15,7 @@ func (i MenuItem) Title() string {
 }
 
 func (i MenuItem) Description() string {
-	return i.title
+	return i.description
 }
 
 func (i MenuItem) Destination() Destination {

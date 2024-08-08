@@ -40,7 +40,7 @@ func (m AppModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "q", "ctrl+c":
 			return m, tea.Quit
 		case "backspace":
-			m.page = page.NewHomePage(0, 0)
+			m.page = page.NewHomePage(m.width, m.height)
 		}
 	}
 
@@ -54,7 +54,9 @@ func (m AppModel) View() string {
 	if m.err != nil {
 		return m.err.Error()
 	}
-	str := applicationStyle.Render(m.page.View())
+	var debug string
+	//debug = fmt.Sprintf("\nresolution (application): %d x %d", m.width, m.height)
+	str := applicationStyle.Render(m.page.View(), debug)
 	if m.quitting {
 		return str + "\n"
 	}

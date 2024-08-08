@@ -2,5 +2,5 @@
 
 ---
 
-A simple tool to manage development environments written in [Go](https://go.dev/).
+A simple tool to manage the development environment written in [Go](https://go.dev/).
 

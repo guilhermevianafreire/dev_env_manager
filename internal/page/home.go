@@ -33,17 +33,17 @@ func NewHomePage(width int, height int) HomePageModel {
 func NewMenu(width int, height int) list.Model {
 	menuItems := make([]list.Item, 5)
 
-	menuItems[0] = component.NewMenuItem("Environment", "Manage the development environment", component.Environment)
-	menuItems[1] = component.NewMenuItem("Infrastructure", "Manage the development environment infrastructure", component.Infrastructure)
-	menuItems[2] = component.NewMenuItem("Configuration", "Configure this application", component.Configuration)
-	menuItems[3] = component.NewMenuItem("Application", "Manage the development environment applications", component.Application)
-	menuItems[4] = component.NewMenuItem("Manual", "Application manual", component.Application)
+	menuItems[0] = component.NewMenuItemDestination("Environment", "Manage the development environment", component.EnvironmentSoftware)
+	menuItems[1] = component.NewMenuItemDestination("Infrastructure", "Manage the development environment infrastructure", component.Infrastructure)
+	menuItems[2] = component.NewMenuItemDestination("Configuration", "Configure this application", component.Configuration)
+	menuItems[3] = component.NewMenuItemDestination("Application", "Manage the development environment applications", component.Application)
+	menuItems[4] = component.NewMenuItemDestination("Manual", "Application manual", component.Manual)
 
 	delegate := list.NewDefaultDelegate()
 
 	menu := list.New(menuItems, delegate, width, height)
 
-	menu.Title = "Development Environment Manager"
+	menu.Title = "Development EnvironmentSoftware Manager"
 	menu.Styles.Title = menuStyle
 
 	return menu
@@ -66,13 +66,13 @@ func (m HomePageModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			break
 		}
 		switch msg.String() {
-		case "enter":
+		case component.EnterKey:
 			i, ok := m.menu.SelectedItem().(component.MenuItem)
 			if ok {
 				m.selectedItem = i
 				switch m.selectedItem.Destination() {
-				case component.Environment:
-					return NewEnvironmentPage(m.width, m.height), nil
+				case component.EnvironmentSoftware:
+					return NewEnvironmentSoftwarePage(m.width, m.height), nil
 				}
 			}
 			return m, nil
@@ -87,8 +87,6 @@ func (m HomePageModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m HomePageModel) View() string {
-	var debug string
-	//debug = fmt.Sprintf("\nresolution (home): %d x %d", m.width, m.height)
-	str := environmentMenuPageStyle.Render(m.menu.View(), debug)
+	str := environmentActionsMenuPageStyle.Render(m.menu.View())
 	return str
 }

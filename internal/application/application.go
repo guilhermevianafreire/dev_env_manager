@@ -3,6 +3,7 @@ package application
 import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/guilhermevianafreire/dev_env_manager/internal/component"
 	"github.com/guilhermevianafreire/dev_env_manager/internal/page"
 	"log"
 )
@@ -37,9 +38,9 @@ func (m AppModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.page = page.NewHomePage(m.width, m.height)
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "q", "ctrl+c":
+		case component.QKey, component.ControlCKey:
 			return m, tea.Quit
-		case "backspace":
+		case component.HomeKey:
 			m.page = page.NewHomePage(m.width, m.height)
 		}
 	}
@@ -54,9 +55,7 @@ func (m AppModel) View() string {
 	if m.err != nil {
 		return m.err.Error()
 	}
-	var debug string
-	//debug = fmt.Sprintf("\nresolution (application): %d x %d", m.width, m.height)
-	str := applicationStyle.Render(m.page.View(), debug)
+	str := applicationStyle.Render(m.page.View())
 	if m.quitting {
 		return str + "\n"
 	}
